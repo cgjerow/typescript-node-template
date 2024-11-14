@@ -1,6 +1,7 @@
 import eslint from "@eslint/js";
 import tseslint from "typescript-eslint";
 import globals from "globals";
+import eslintConfigPrettier from "eslint-config-prettier";
 
 // eslint.config.js
 export default [
@@ -19,4 +20,5 @@ export default [
       "prefer-const": "error",
     },
   },
+  eslintConfigPrettier,
 ];
