@@ -1,20 +1,18 @@
-# Use an official Node.js runtime as the base image
-FROM node:18
-
-# Set the working directory in the container
+FROM node:18-slim AS builder
 WORKDIR /app
 
-# Copy package.json and package-lock.json (if available)
-COPY package*.json ./
+COPY package*.json .
+COPY src ./src
+COPY tsconfig.json .
 
-# Install dependencies
-RUN npm install
+RUN npm i
+RUN npm run build
+RUN npm i --omit=dev
 
-# Copy the rest of the application code
-COPY . .
 
-# Expose the port your app listens on
-EXPOSE 3000
-
-# Start the application
+FROM node:18-slim
+WORKDIR /app
+COPY --from=builder /app/dist ./dist/
+COPY --from=builder /app/node_modules ./dist/node_modules
+COPY --from=builder /app/package.json .
 CMD ["node", "./dist/index.js"]
